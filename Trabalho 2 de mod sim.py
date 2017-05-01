@@ -5,7 +5,7 @@ from scipy.integrate import odeint
 def Func_aspirina(Y,t):
     G = Y[0]
     S = Y[1]
-    x = 688
+    x = 688 
     if S > x and G >0:
         dSdt = 0.0333*500 - x*0.00077
         dGdt = -0.0333*500 
@@ -19,22 +19,34 @@ def Func_aspirina(Y,t):
         dGdt = 0 
         dSdt = -S*0.0057
     
-    return [dGdt,dSdt]
-
-tempo = np.arange(0,240,1)
+    return [dGdt,dSdt] 
+x = 120
+y = 7
+tempo = np.arange(0,x,1)
 
 solucao= odeint(Func_aspirina,[500,0],tempo)
+Listona = []
+Listona.append(solucao[:,1])
 
-for i in range(7):
+
+for i in range(y):
     solucao= odeint(Func_aspirina,[500,solucao[:,1][-1]],tempo)
-
-print(solucao[:,1][-1])
-
-
+    Listona.append(solucao[:,1])
+Listona = np.append(Listona,solucao[:,1][-1])   
 
 
 
-plt.plot(tempo,solucao[:,1],"r")
+
+
+plt.plot(tempo,solucao[:,0],"y")
+plt.grid(True)
+plt.title("Quantidade de aspirina no sangue")
+plt.xlabel("Tempo(min)")
+plt.ylabel("Sangue")
+plt.show()
+tempo = np.arange(0,x*(y+1)+1,1)
+
+plt.plot(tempo,Listona,"r")
 plt.grid(True)
 plt.title("Quantidade de aspirina no sangue")
 plt.xlabel("Tempo(min)")
