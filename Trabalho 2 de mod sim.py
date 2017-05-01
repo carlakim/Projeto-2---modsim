@@ -5,27 +5,34 @@ from scipy.integrate import odeint
 def Func_aspirina(Y,t):
     G = Y[0]
     S = Y[1]
-    if G >0:
-        dGdt = -0.0333*500
-    else:
+    x = 688
+    if S > x and G >0:
+        dSdt = 0.0333*500 - x*0.00077
+        dGdt = -0.0333*500 
+    elif S > x and G < 0:
         dGdt = 0
-        
-    if G >0:
-        dSdt = 0.0333*500 - S*0.0057
+        dSdt = - x*0.00077
+    elif G >0:
+        dGdt = -0.0333*500
+        dSdt = 0.0333*500 - S*0.00077
     else:
+        dGdt = 0 
         dSdt = -S*0.0057
+    
     return [dGdt,dSdt]
 
 tempo = np.arange(0,240,1)
 
 solucao= odeint(Func_aspirina,[500,0],tempo)
 
-plt.plot(tempo,solucao[:,0],"y")
-plt.grid(True)
-plt.title("Quantidade de aspirina no sistem gastroinstetinal")
-plt.xlabel("Tempo(min)")
-plt.ylabel("Gastrointestinal")
-plt.show()
+for i in range(7):
+    solucao= odeint(Func_aspirina,[500,solucao[:,1][-1]],tempo)
+
+print(solucao[:,1][-1])
+
+
+
+
 
 plt.plot(tempo,solucao[:,1],"r")
 plt.grid(True)
